@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,27 +24,37 @@ import io.swagger.annotations.Api;
 @RestController
 @RequestMapping("/segmentos-rv")
 @Api
-public class CadastroSegmentoRVResource extends GenericResource{
+public class CadastroSegmentoRVResource extends GenericResource {
 
 	@Autowired
 	CadastroSegmentoRVServiceImpl service;
-	
+
 	@Autowired
 	CadastroSegmentoRVMapper mapper;
-	
+
 	@GetMapping
-	public ResponseEntity<List<CadastroSegmentoRVDTO>> toList(){
-		return retornarSucesso(mapper.mapear(service.findAll()));
+	public ResponseEntity<List<CadastroSegmentoRVDTO>> toList() {
+		List<CadastroSegmentoRVDTO> lsDTO = mapper.mapear(service.findAll());
+		return retornarSucesso(lsDTO);
 	}
-	
+
+	@GetMapping("/{id}")
+	public ResponseEntity<CadastroSegmentoRVDTO> find(@PathVariable(value = "id") Long id)
+			throws NaoEncontradoException {
+		CadastroSegmentoRVDTO objDTO = mapper.mapear(service.findById(id));
+		if (objDTO == null)
+			return retornarNaoEncontrado();
+		return retornarSucesso(objDTO);
+	}
+
 	@PostMapping
-	public ResponseEntity<CadastroSegmentoRVDTO> save(@RequestBody CadastroSegmentoRVDTO objDTO){
+	public ResponseEntity<CadastroSegmentoRVDTO> save(@RequestBody CadastroSegmentoRVDTO objDTO) {
 		return retornarCriado(mapper.mapear(service.save(mapper.mapear(objDTO))));
-		
+
 	}
-	
+
 	@DeleteMapping
-	public ResponseEntity<Void> delete(@RequestParam(value="id") Long id){
+	public ResponseEntity<Void> delete(@RequestParam(value = "id") Long id) {
 		try {
 			service.delete(id);
 			return retornarSucesso(null);
@@ -52,13 +63,34 @@ public class CadastroSegmentoRVResource extends GenericResource{
 			return retornarErro(null);
 		}
 	}
-	
+
 	@PutMapping
-	public ResponseEntity<CadastroSegmentoRVDTO> update(@RequestBody CadastroSegmentoRVDTO objDTO) throws NaoEncontradoException{
+	public ResponseEntity<CadastroSegmentoRVDTO> update(@RequestBody CadastroSegmentoRVDTO objDTO)
+			throws NaoEncontradoException {
 		CadastroSegmentoRVDomain obj = service.findById(objDTO.getId());
-		if(obj == null)
+		if (obj == null)
 			return retornarNaoEncontrado();
 		return retornarSucesso(mapper.mapear(service.update(mapper.mapear(objDTO))));
-		
+
 	}
+
+//	@GetMapping("/filtro")
+//	public ResponseEntity<List<CadastroSegmentoRVDomain>> filter(@RequestParam(value="selected") String opcaoSelecionada,
+//																 @RequestParam(value="codigo") Long codigo,
+//																 @RequestParam(value="src") String src) {
+//
+//		if (opcaoSelecionada != null && opcaoSelecionada.equalsIgnoreCase("Código")) {
+//			CadastroSegmentoRVDomain cadastro = service.findByFilter(opcaoSelecionada, codigo);
+//			return retornarSucesso(Arrays.asList(cadastro));
+//
+//		} else if (src != null && src.length() > 2
+//				&& opcaoSelecionada.equalsIgnoreCase("Segmento")) {
+//
+//			return retornarSucesso(service.findByFilter(opcaoSelecionada, src));
+//
+//		} else {
+//			return retornarSucesso(Collections.emptyList());
+//		}
+//
+//	}
 }

@@ -10,13 +10,29 @@ import br.com.portoseguro.rbc.remuneracaovariavel.dto.CadastroSegmentoRVDTO;
 
 @Component
 public class CadastroSegmentoRVMapper {
+	private static final String SEGURO = "SEGURO";
+	private static final String NAO_SEGURO = "NÃO SEGURO";
+	
+	private static final String SIM ="SIM";
+	private static final String NAO ="NÃO";
+	
+	private static final String ATIVO = "ATIVO";
+	private static final String INATIVO = "INATIVO";
 	
 	public CadastroSegmentoRVDTO mapear(CadastroSegmentoRVDomain obj){
+		if(obj == null)
+			return null;
 		CadastroSegmentoRVDTO objDTO = new CadastroSegmentoRVDTO();
 		objDTO.setId(obj.getId());
-		objDTO.setIsSeguro(obj.getIsSeguro());
-		objDTO.setNmSegmentoRv(obj.getNmSegmentoRv());
+		
+		objDTO.setTipoProduto(obj.getTipoProduto() ? SEGURO : NAO_SEGURO);
+		objDTO.setEquipeComercial(obj.getEquipeComercial() ? SIM : NAO);
+		objDTO.setAssessoria(obj.getAssessoria() ? SIM : NAO);		
+		objDTO.setNmSegmentoRV(obj.getNmSegmentoRV());
 		objDTO.setObservacao(obj.getObservacao());
+		objDTO.setStatus(obj.getStatus()?ATIVO : INATIVO);
+		objDTO.setCampanha(obj.getCampanha()?SIM:NAO);
+		objDTO.setGratificacao(obj.getGratificacao()?SIM:NAO);
 		return objDTO;
 	}
 	
@@ -24,21 +40,33 @@ public class CadastroSegmentoRVMapper {
 		
 		List<CadastroSegmentoRVDTO> lsObjDTO = new ArrayList<CadastroSegmentoRVDTO>();
 		
-		lsObj.stream().map(item -> {
+		for (CadastroSegmentoRVDomain item: lsObj) {
 			lsObjDTO.add(mapear(item));
-			return item;
-		});
+		}
 		
 		return lsObjDTO;
 	}
 	
 	public CadastroSegmentoRVDomain mapear(CadastroSegmentoRVDTO objDTO) {
+		String vdd = "true";
+		if(objDTO == null)
+			return null;
 		CadastroSegmentoRVDomain obj = new CadastroSegmentoRVDomain();
-		obj.setAssessoria(objDTO.getAssessoria());
-		obj.setIsSeguro(objDTO.getIsSeguro());
-		obj.setNmSegmentoRv(objDTO.getNmSegmentoRv());
-		obj.setNormal(objDTO.getNormal());
+		obj.setAssessoria(objDTO.getAssessoria().equalsIgnoreCase(vdd)? true : false);
+		obj.setTipoProduto(objDTO.getTipoProduto().equalsIgnoreCase(SEGURO)?true : false);
+		obj.setNmSegmentoRV(objDTO.getNmSegmentoRV());
+		obj.setEquipeComercial(objDTO.getEquipeComercial().equalsIgnoreCase(vdd)?true : false);
 		obj.setObservacao(objDTO.getObservacao());
+		
+		obj.setCampanha(objDTO.getCampanha().equalsIgnoreCase(vdd)? true : false);
+		obj.setGratificacao(objDTO.getGratificacao().equalsIgnoreCase(vdd)? true : false);
+		obj.setStatus(objDTO.getStatus().equalsIgnoreCase(ATIVO)? true : false);
+		obj.setObservacaoMudancaStatus(objDTO.getObservacaoMudancaStatus());
+		if(objDTO.getId() != null) {
+			obj.setId(objDTO.getId());
+		}
+		
+
 		return obj;
 	}
 }

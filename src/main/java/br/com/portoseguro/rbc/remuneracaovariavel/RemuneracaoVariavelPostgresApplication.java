@@ -1,4 +1,4 @@
-package br.com.portoseguro.rbc.remuneracaovariavel;
+ package br.com.portoseguro.rbc.remuneracaovariavel;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

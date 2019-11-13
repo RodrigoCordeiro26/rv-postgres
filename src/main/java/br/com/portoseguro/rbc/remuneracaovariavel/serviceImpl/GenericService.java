@@ -29,7 +29,7 @@ public class GenericService<T> {
 
 	public T findById(Long id) throws NaoEncontradoException {
 		// TODO Auto-generated method stub
-		return repo.findById(id).orElseThrow(()->new NaoEncontradoException("Entidade Não encontrada"));
+		return repo.findById(id).orElse(null);
 	}
 
 	public T save(T entity) {

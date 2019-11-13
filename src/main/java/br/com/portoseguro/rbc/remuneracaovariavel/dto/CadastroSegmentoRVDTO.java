@@ -1,10 +1,7 @@
 package br.com.portoseguro.rbc.remuneracaovariavel.dto;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
-import br.com.portoseguro.rbc.remuneracaovariavel.domain.CadastroSegmentoRVDomain;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,13 +12,14 @@ public class CadastroSegmentoRVDTO implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	private Long id;
-	private String nmSegmentoRv;
-	private Boolean isSeguro;
+	private String nmSegmentoRV;
+	private String tipoProduto;
 	private String observacao;
-	private Boolean assessoria;
-	private Boolean normal;
-	
-	
-	
+	private String assessoria;
+	private String equipeComercial;
+	private String status;
+	private String gratificacao;
+	private String campanha;
+	private String observacaoMudancaStatus;
 
 }
