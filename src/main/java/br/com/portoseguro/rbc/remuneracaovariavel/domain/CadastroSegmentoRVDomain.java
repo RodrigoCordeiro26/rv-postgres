@@ -52,10 +52,6 @@ public class CadastroSegmentoRVDomain implements Serializable{
 	@Column(name="status")
 	private Boolean status;
 	
-	@ElementCollection(fetch=FetchType.EAGER)
-	@CollectionTable(name="TipoCalculo")
-	private Set<Integer> tipoCalculo;
-	
 	@Column(name="obsMudancaStatus")
 	private String observacaoMudancaStatus;
 	
@@ -76,7 +72,6 @@ public class CadastroSegmentoRVDomain implements Serializable{
 		this.gratificacao = gratificacao;
 		this.campanha = campanha;
 		this.status = status;
-		this.tipoCalculo = tipoCalculo;
 		this.observacaoMudancaStatus = obsMudancaStatus;
 	}
 	
