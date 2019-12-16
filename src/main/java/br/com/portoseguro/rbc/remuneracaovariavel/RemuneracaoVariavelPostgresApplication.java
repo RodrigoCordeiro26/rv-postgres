@@ -1,5 +1,6 @@
  package br.com.portoseguro.rbc.remuneracaovariavel;
 
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -12,10 +13,15 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @EnableScheduling
 @SpringBootApplication
-public class RemuneracaoVariavelPostgresApplication {
+public class RemuneracaoVariavelPostgresApplication implements CommandLineRunner{
 
 	public static void main(String[] args) {
 		SpringApplication.run(RemuneracaoVariavelPostgresApplication.class, args);
+	}
+
+	@Override
+	public void run(String... args) throws Exception {
+		
 	}
 
 }

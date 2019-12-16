@@ -10,10 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import br.com.portoseguro.rbc.remuneracaovariavel.domain.RamoDomain;
-
 /**
  * @author rodrigocordeiro 17/10/2019
  * 

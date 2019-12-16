@@ -1,16 +1,16 @@
 package br.com.portoseguro.rbc.remuneracaovariavel.domain;
 
 import java.io.Serializable;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
-import javax.persistence.CollectionTable;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import lombok.Getter;
@@ -55,13 +55,17 @@ public class CadastroSegmentoRVDomain implements Serializable{
 	@Column(name="obsMudancaStatus")
 	private String observacaoMudancaStatus;
 	
+	
+	@Column(name="ultimaAtualizacao")
+	private Date dataAtualizacao;
+	
 	public CadastroSegmentoRVDomain() {
 		setStatus(Boolean.TRUE);
 	}
 
 	public CadastroSegmentoRVDomain(Long id, String nmSegmentoRV, Boolean tipoProduto, String observacao,
 			Boolean assessoria, Boolean equipeComercial, Boolean gratificacao, Boolean campanha, Boolean status,
-			Set<Integer> tipoCalculo, String obsMudancaStatus) {
+			String observacaoMudancaStatus, Date dataAtualizacao) {
 		super();
 		this.id = id;
 		this.nmSegmentoRV = nmSegmentoRV;
@@ -72,8 +76,11 @@ public class CadastroSegmentoRVDomain implements Serializable{
 		this.gratificacao = gratificacao;
 		this.campanha = campanha;
 		this.status = status;
-		this.observacaoMudancaStatus = obsMudancaStatus;
+		this.observacaoMudancaStatus = observacaoMudancaStatus;
+		this.dataAtualizacao = dataAtualizacao;
 	}
+
+
 	
 	
 	

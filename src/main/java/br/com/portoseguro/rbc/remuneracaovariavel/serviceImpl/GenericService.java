@@ -35,6 +35,10 @@ public class GenericService<T> {
 	public T save(T entity) {
 		return repo.save(entity);
 	}
+	
+	public List<T> saveAll(List<T> entities) {
+		return (List<T>) repo.saveAll(entities);
+	}
 
 	public T update(T entity) {
 		// TODO Auto-generated method stub
@@ -55,11 +59,17 @@ public class GenericService<T> {
 			}
 			
 			
-			
-
-
 		
 	}
 	
-
+	public boolean deleteAll(List<T> objOLD) {
+		try {
+			deleteAll(objOLD);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
 }

@@ -1,4 +1,4 @@
-package br.com.portoseguro.rbc.remuneracaovariavel.dto;
+package br.com.portoseguro.rbc.remuneracaovariavel.dto.Segmento;
 
 import java.io.Serializable;
 
@@ -21,5 +21,6 @@ public class CadastroSegmentoRVDTO implements Serializable{
 	private String gratificacao;
 	private String campanha;
 	private String observacaoMudancaStatus;
+	private String dataAtualizacao;
 
 }

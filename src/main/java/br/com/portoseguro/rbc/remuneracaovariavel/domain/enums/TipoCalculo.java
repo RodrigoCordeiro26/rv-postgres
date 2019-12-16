@@ -37,5 +37,4 @@ public enum TipoCalculo {
 		
 		throw new IllegalArgumentException("Id inválido: " + cod);
 	}
-	
 }

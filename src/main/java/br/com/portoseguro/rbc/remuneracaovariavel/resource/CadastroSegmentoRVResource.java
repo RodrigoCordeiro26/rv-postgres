@@ -1,6 +1,11 @@
 package br.com.portoseguro.rbc.remuneracaovariavel.resource;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +20,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.portoseguro.rbc.remuneracaovariavel.domain.CadastroSegmentoRVDomain;
-import br.com.portoseguro.rbc.remuneracaovariavel.dto.CadastroSegmentoRVDTO;
+import br.com.portoseguro.rbc.remuneracaovariavel.dto.Segmento.CadastroSegmentoRVDTO;
+import br.com.portoseguro.rbc.remuneracaovariavel.dto.Segmento.SegmentoDTO;
 import br.com.portoseguro.rbc.remuneracaovariavel.exceptions.NaoEncontradoException;
 import br.com.portoseguro.rbc.remuneracaovariavel.mappers.CadastroSegmentoRVMapper;
+import br.com.portoseguro.rbc.remuneracaovariavel.repository.CadastroSegmentoRVRepository;
 import br.com.portoseguro.rbc.remuneracaovariavel.serviceImpl.CadastroSegmentoRVServiceImpl;
 import io.swagger.annotations.Api;
 
@@ -32,6 +39,9 @@ public class CadastroSegmentoRVResource extends GenericResource {
 	@Autowired
 	CadastroSegmentoRVMapper mapper;
 
+	@Autowired
+	CadastroSegmentoRVRepository repo;
+	
 	@GetMapping
 	public ResponseEntity<List<CadastroSegmentoRVDTO>> toList() {
 		List<CadastroSegmentoRVDTO> lsDTO = mapper.mapear(service.findAll());
@@ -48,7 +58,9 @@ public class CadastroSegmentoRVResource extends GenericResource {
 	}
 
 	@PostMapping
-	public ResponseEntity<CadastroSegmentoRVDTO> save(@RequestBody CadastroSegmentoRVDTO objDTO) {
+	public ResponseEntity<CadastroSegmentoRVDTO> save(@RequestBody CadastroSegmentoRVDTO objDTO) throws ParseException {
+		
+		
 		return retornarCriado(mapper.mapear(service.save(mapper.mapear(objDTO))));
 
 	}
@@ -66,31 +78,39 @@ public class CadastroSegmentoRVResource extends GenericResource {
 
 	@PutMapping
 	public ResponseEntity<CadastroSegmentoRVDTO> update(@RequestBody CadastroSegmentoRVDTO objDTO)
-			throws NaoEncontradoException {
+			throws NaoEncontradoException, ParseException {
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		sdf.setTimeZone (TimeZone.getTimeZone("GMT-03:00"));
 		CadastroSegmentoRVDomain obj = service.findById(objDTO.getId());
-		if (obj == null)
+		if (obj == null) {
 			return retornarNaoEncontrado();
+		}
+		objDTO.setObservacao(obj.getObservacao());
+		objDTO.setDataAtualizacao(sdf.format(new Date()));
+		
+		if(objDTO.getStatus().equalsIgnoreCase("inativo")) {
+			obj.setDataAtualizacao(sdf.parse(objDTO.getDataAtualizacao()));
+			obj.setObservacaoMudancaStatus(objDTO.getObservacaoMudancaStatus());
+			obj.setStatus(false);
+			return retornarSucesso(mapper.mapear(repo.save(obj)));
+			
+		}
+		
 		return retornarSucesso(mapper.mapear(service.update(mapper.mapear(objDTO))));
 
 	}
 
-//	@GetMapping("/filtro")
-//	public ResponseEntity<List<CadastroSegmentoRVDomain>> filter(@RequestParam(value="selected") String opcaoSelecionada,
-//																 @RequestParam(value="codigo") Long codigo,
-//																 @RequestParam(value="src") String src) {
-//
-//		if (opcaoSelecionada != null && opcaoSelecionada.equalsIgnoreCase("Código")) {
-//			CadastroSegmentoRVDomain cadastro = service.findByFilter(opcaoSelecionada, codigo);
-//			return retornarSucesso(Arrays.asList(cadastro));
-//
-//		} else if (src != null && src.length() > 2
-//				&& opcaoSelecionada.equalsIgnoreCase("Segmento")) {
-//
-//			return retornarSucesso(service.findByFilter(opcaoSelecionada, src));
-//
-//		} else {
-//			return retornarSucesso(Collections.emptyList());
-//		}
-//
-//	}
+	
+	@GetMapping("/segmentos")
+	public ResponseEntity<List<SegmentoDTO>> buscarSegmentoMinimo() {
+		
+		List<CadastroSegmentoRVDomain> lsCadastroSegmento = service.findAll();
+		
+		List<SegmentoDTO> lsSegmento = lsCadastroSegmento.stream().map(segmento->{
+			return new SegmentoDTO(segmento.getId(), segmento.getNmSegmentoRV());
+		}).collect(Collectors.toList());
+		
+		return retornarSucesso(lsSegmento);
+	}
 }
